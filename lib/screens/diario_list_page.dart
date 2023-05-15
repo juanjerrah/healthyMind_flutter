@@ -66,13 +66,23 @@ class _DiarioListPageState extends State<DiarioListPage> {
                   child: ListTile(
                     title: Row(
                       children: [
-                        Text(diaDaSemana),
+                        Text(
+                          formatDate,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff374957),
+                          ),
+                        ),
                         const Icon(Icons.calendar_month),
                       ],
                     ),
                     subtitle: Text(
-                      formatDate,
-                      style: const TextStyle(fontSize: 20),
+                      diaDaSemana,
+                      style: const TextStyle(
+                          fontSize: 25,
+                          color: Color(0xff374957),
+                          fontWeight: FontWeight.w600),
                     ),
                     trailing: IconButton(
                       onPressed: () => deleteById(id),
@@ -126,11 +136,11 @@ class _DiarioListPageState extends State<DiarioListPage> {
     final dataFormat = DateTime.parse(data);
 
     List<String> nomesDias = [
-      'Segunda',
-      'Terça',
-      'Quarta',
-      'Quinta',
-      'Sexta',
+      'Segunda-Feira',
+      'Terça-Feira',
+      'Quarta-Feira',
+      'Quinta-Feira',
+      'Sexta-Feira',
       'Sábado',
       'Domingo',
     ];
