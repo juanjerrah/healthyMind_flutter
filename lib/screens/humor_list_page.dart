@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hm/globals/color.dart';
+
 import 'package:hm/screens/forms/humor_form_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,12 +19,24 @@ class _HumorListPageState extends State<HumorListPage> {
   List humores = [];
   bool isLoading = true;
 
-  List<Map> tiposHumores = [
-    {"nome": "Feliz", "emoji": AnimatedEmoji(AnimatedEmojis.smile)},
-    {"nome": "Entediado", "emoji": AnimatedEmoji(AnimatedEmojis.neutralFace)},
-    {"nome": "Triste", "emoji": AnimatedEmoji(AnimatedEmojis.cry)},
-    {"nome": "Confuso", "emoji": AnimatedEmoji(AnimatedEmojis.thinkingFace)},
-    {"nome": "Bravo", "emoji": AnimatedEmoji(AnimatedEmojis.angry)},
+  List<Map<dynamic, dynamic>> tiposHumor = [
+    {
+      "id": 1,
+      "mensagem": "Me sentindo Feliz",
+      "emoji": "lib/assets/happy2.svg"
+    },
+    {
+      "id": 2,
+      "mensagem": "Me sentindo Entediado",
+      "emoji": "lib/assets/bored.svg"
+    },
+    {"id": 3, "mensagem": "Me sentindo Triste", "emoji": "lib/assets/sad.svg"},
+    {
+      "id": 4,
+      "mensagem": "Me sentindo Confuso",
+      "emoji": "lib/assets/confused2.svg"
+    },
+    {"id": 5, "mensagem": "Me sentindo Bravo", "emoji": "lib/assets/angry.svg"},
   ];
 
   @override
@@ -64,69 +74,71 @@ class _HumorListPageState extends State<HumorListPage> {
               ),
             ),
           ),
-          child: ListView.builder(
-            itemCount: humores.length,
-            itemBuilder: ((context, index) {
-              final item = humores[index] as Map;
+          child: ListView.separated(
+            itemBuilder: (BuildContext context, int humorIndex) {
+              final item = humores[humorIndex] as Map;
               final id = item['id'] as String;
-
-              final titulo = item["tituloHumor"] as String;
               final tipoHumor = item["tipoDoHumor"] as int;
-
-              return InkWell(
+              return ListTile(
                 onTap: () => NavigateToEditPage(item),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: const Color(0xffd9d9d9),
+                title: Text(
+                  tiposHumor[tipoHumor - 1]["mensagem"],
+                  style: const TextStyle(
+                    fontSize: 15,
                   ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(16, 9, 8, 9),
-                    title: Row(
-                      children: [
-                        Text(
-                          "Me sentindo ${tiposHumores[tipoHumor - 1]["nome"]}",
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xff374957)),
-                        ),
-                        tiposHumores[tipoHumor - 1]["nome"] == "Feliz"
-                            ? const AnimatedEmoji(AnimatedEmojis.smile)
-                            : tiposHumores[tipoHumor - 1]["nome"] == "Entediado"
-                                ? const AnimatedEmoji(
-                                    AnimatedEmojis.neutralFace)
-                                : tiposHumores[tipoHumor - 1]["nome"] ==
-                                        "Triste"
-                                    ? const AnimatedEmoji(AnimatedEmojis.cry)
-                                    : tiposHumores[tipoHumor - 1]["nome"] ==
-                                            "Confuso"
-                                        ? const AnimatedEmoji(
-                                            AnimatedEmojis.thinkingFace)
-                                        : tiposHumores[tipoHumor - 1]["nome"] ==
-                                                "Bravo"
-                                            ? const AnimatedEmoji(
-                                                AnimatedEmojis.angry)
-                                            : const AnimatedEmoji(
-                                                AnimatedEmojis.kissingHeart),
-                      ],
-                    ),
-                    subtitle: Text(
-                      formatarTexto(titulo),
-                      style: const TextStyle(
-                          fontSize: 25,
-                          color: Color(0xff374957),
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: IconButton(
-                      onPressed: () => deleteById(id),
-                      icon: Icon(Icons.delete),
-                    ),
+                ),
+                subtitle: Text(
+                  humores[humorIndex]['tituloHumor'],
+                  maxLines: 1,
+                  softWrap: true,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                    color: Colors.black,
+                  ),
+                ),
+                leading: SizedBox(
+                  width: 40,
+                  child: SvgPicture.asset(tiposHumor[tipoHumor - 1]["emoji"]),
+                ),
+                trailing: CircleAvatar(
+                  child: IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () {
+                      AlertDialog(
+                        title: const Text("Excluir Humor"),
+                        content: const Text("Certeza que deseja excluir o registro"),
+                        actions: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('Cancelar'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('Apagar'),
+                            onPressed: () {
+                              deleteById(id);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                    color: Colors.redAccent,
                   ),
                 ),
               );
-            }),
+            },
+            itemCount: humores.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
           ),
         ),
       ),
@@ -172,9 +184,9 @@ class _HumorListPageState extends State<HumorListPage> {
         humores = filtered;
       });
 
-      showSuccessMessage(context, "Deletion Succeded");
+      showSuccessMessage(context, "Excluído com sucesso");
     } else {
-      showErroMessage(context, "Deletion Failed");
+      showErroMessage(context, "Falha ao tentar excluir");
     }
 
     print(response.statusCode);

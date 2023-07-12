@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hm/screens/forms/diario_form.dart';
@@ -7,6 +9,7 @@ import 'package:hm/screens/settings_page.dart';
 
 import '../globals/color.dart';
 import 'humor_list_page.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentIndex = 0;
+  int currentIndex = 2;
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -34,32 +37,22 @@ class _HomePageState extends State<HomePage> {
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
-        actions: currentIndex != 1
-            ? const [
-                FaIcon(
-                  FontAwesomeIcons.filter,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 20),
-                FaIcon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 10),
-              ]
-            : null,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () => currentIndex == 0
+                ? navigateToDiarioFormPage()
+                : navigateToHumorFormPage(),
+          ),
+          SizedBox(width: 10),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: screens[currentIndex],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: currentIndex == 0
-            ? navigateToDiarioFormPage
-            : navigateToHumorFormPage,
-        tooltip: 'Increment',
-        backgroundColor: cor,
-        child: const Icon(Icons.add, color: Colors.white),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
@@ -117,5 +110,28 @@ class _HomePageState extends State<HomePage> {
     //   isLoading = true;
     // });
     // fetchTodo();
+  }
+
+  Future<void> FetchAll() async {
+    const urlBase = 'https://10.0.2.2:7275/api/Diario';
+    const header = {'accept': 'text/plain'};
+
+    final response = await http.get(Uri.parse(urlBase), headers: header);
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final result = json as List;
+      // setState(() {
+      //   diarios = result;
+      // });
+    }
+
+    // print(diarios);
+
+    // setState(() {
+    //   isLoading = false;
+    // });
+
+    print(response.body);
   }
 }

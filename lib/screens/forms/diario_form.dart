@@ -128,41 +128,15 @@ class _DiarioFormState extends State<DiarioForm> {
     final response = await http.put(
       Uri.parse(baseUrl),
       body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json',"accept": "*/*"},
+      headers: {'Content-Type': 'application/json', "accept": "*/*"},
     );
 
     if (response.statusCode == 200) {
-      diarioController.text = '';
-      showSuccessMessage(context, "Updation Success");
+      showSuccessMessage(context, "Diário atualizado com sucesso");
     } else {
       showErroMessage(context, "Updation Failed");
     }
   }
-
-  // Future<void> submit() async {
-  //   const urlBase = 'https://10.0.2.2:7275/api/Diario';
-  //   const header = {'accept': 'text/plain'};
-  //   final diario = diarioController.text;
-  //   final body = {
-  //     "descricao": diario,
-  //   };
-
-  //   final response = await http.post(
-  //     Uri.parse(urlBase),
-  //     body: jsonEncode(body),
-  //     headers: header,
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     diarioController.text = '';
-  //     showSuccessMessage("Creation Success");
-  //     NavigateToTodoPage();
-  //   } else {
-  //     showErroMessage("Creation Failed");
-  //   }
-
-  //   print(response.body);
-  // }
 
   Future<void> NavigateToDiaryListPage() async {
     final route = MaterialPageRoute(

@@ -19,7 +19,6 @@ class _DiarioListPageState extends State<DiarioListPage> {
   bool isLoading = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FetchAll();
   }
@@ -51,47 +50,49 @@ class _DiarioListPageState extends State<DiarioListPage> {
               ),
             ),
           ),
-          child: ListView.builder(
-            itemCount: diarios.length,
-            itemBuilder: (context, index) {
-              final item = diarios[index] as Map;
+          child: ListView.separated(
+            itemBuilder: (BuildContext context, int diarioIndex) {
+              final item = diarios[diarioIndex] as Map;
               final id = item['id'] as String;
               final formatDate = formatarData(item["dataInclusao"]);
               final diaDaSemana = obterNomeDia(item["dataInclusao"]);
-              return InkWell(
+              return ListTile(
                 onTap: () => NavigateToEditPage(item),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  color: const Color(0xffd9d9d9),
-                  child: ListTile(
-                    title: Row(
-                      children: [
-                        Text(
-                          formatDate,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff374957),
-                          ),
-                        ),
-                        const Icon(Icons.calendar_month),
-                      ],
-                    ),
-                    subtitle: Text(
-                      diaDaSemana,
-                      style: const TextStyle(
-                          fontSize: 25,
-                          color: Color(0xff374957),
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: IconButton(
-                      onPressed: () => deleteById(id),
-                      icon: Icon(Icons.delete),
-                    ),
+                title: Text(
+                  formatDate,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff374957),
+                  ),
+                ),
+                subtitle: Text(
+                  diaDaSemana,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    color: Color(0xff374957),
+                    fontWeight: FontWeight.w600,
+                   ),
+                ),
+                leading: const SizedBox(
+                  width: 40,
+                  child: Icon(
+                    Icons.calendar_month,
+                    color: Color(0xFF011E31),
+                  ),
+                ),
+                trailing: CircleAvatar(
+                  child: IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () => deleteById(id),
+                    color: Colors.redAccent,
                   ),
                 ),
               );
             },
+            itemCount: diarios.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
           ),
         ),
       ),

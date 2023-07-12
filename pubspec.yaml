@@ -65,6 +65,13 @@ flutter:
   assets:
     - lib/assets/Chakras-bro.svg
     - lib/assets/Diary-bro.svg
+    - lib/assets/happy.svg
+    - lib/assets/happy2.svg
+    - lib/assets/confused.svg
+    - lib/assets/angry.svg
+    - lib/assets/sad.svg
+    - lib/assets/confused2.svg
+    - lib/assets/bored.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

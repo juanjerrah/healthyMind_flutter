@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:animated_emoji/emoji.dart';
 import 'package:animated_emoji/emojis.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hm/screens/humor_list_page.dart';
 import 'package:http/http.dart' as http;
 
 import '../../globals/color.dart';
@@ -42,6 +44,26 @@ class _HumorFormState extends State<HumorForm> {
       permiteVisualizacao = !anonimo;
     }
   }
+
+  List<Map<dynamic, dynamic>> tiposHumor = [
+    {
+      "id": 1,
+      "mensagem": "Me sentindo Feliz",
+      "emoji": "lib/assets/happy2.svg"
+    },
+    {
+      "id": 2,
+      "mensagem": "Me sentindo Entediado",
+      "emoji": "lib/assets/bored.svg"
+    },
+    {"id": 3, "mensagem": "Me sentindo Triste", "emoji": "lib/assets/sad.svg"},
+    {
+      "id": 4,
+      "mensagem": "Me sentindo Confuso",
+      "emoji": "lib/assets/confused2.svg"
+    },
+    {"id": 5, "mensagem": "Me sentindo Bravo", "emoji": "lib/assets/angry.svg"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -102,78 +124,70 @@ class _HumorFormState extends State<HumorForm> {
                 contentPadding: EdgeInsets.only(left: 16, top: 18, bottom: 18),
               ),
             ),
-            Container(
-              height: 60,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: tipoHumor == 1 ? Colors.green : Colors.white,
+                  child: IconButton(
                     onPressed: () => {
                       setState(() {
                         tipoHumor = 1;
                       })
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        tipoHumor == 1 ? Colors.green : Colors.white,
-                      ),
-                    ),
-                    child: const AnimatedEmoji(AnimatedEmojis.smile),
+                    icon: SvgPicture.asset("lib/assets/happy2.svg"),
                   ),
-                  ElevatedButton(
+                ),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: tipoHumor == 2 ? Colors.green : Colors.white,
+                  child: IconButton(
                     onPressed: () => {
                       setState(() {
                         tipoHumor = 2;
                       })
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        tipoHumor == 2 ? Colors.green : Colors.white,
-                      ),
-                    ),
-                    child: const AnimatedEmoji(AnimatedEmojis.neutralFace),
+                    icon: SvgPicture.asset("lib/assets/bored.svg"),
                   ),
-                  ElevatedButton(
+                ),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: tipoHumor == 3 ? Colors.green : Colors.white,
+                  child: IconButton(
                     onPressed: () => {
                       setState(() {
                         tipoHumor = 3;
                       })
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        tipoHumor == 3 ? Colors.green : Colors.white,
-                      ),
-                    ),
-                    child: const AnimatedEmoji(AnimatedEmojis.cry),
+                    icon: SvgPicture.asset("lib/assets/sad.svg"),
                   ),
-                  ElevatedButton(
+                ),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: tipoHumor == 4 ? Colors.green : Colors.white,
+                  child: IconButton(
                     onPressed: () => {
                       setState(() {
                         tipoHumor = 4;
                       })
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        tipoHumor == 4 ? Colors.green : Colors.white,
-                      ),
-                    ),
-                    child: const AnimatedEmoji(AnimatedEmojis.thinkingFace),
+                    icon: SvgPicture.asset("lib/assets/confused2.svg"),
                   ),
-                  ElevatedButton(
+                ),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: tipoHumor == 5 ? Colors.green : Colors.white,
+                  child: IconButton(
                     onPressed: () => {
                       setState(() {
                         tipoHumor = 5;
                       })
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        tipoHumor == 5 ? Colors.green : Colors.white,
-                      ),
-                    ),
-                    child: const AnimatedEmoji(AnimatedEmojis.angry),
+                    icon: SvgPicture.asset("lib/assets/angry.svg"),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Row(
               children: [
@@ -230,7 +244,7 @@ class _HumorFormState extends State<HumorForm> {
       tituloHumorController.text = '';
       descricaoHumorController.text = '';
       showSuccessMessage(context, "Creation Success");
-      //NavigateToDiaryListPage;
+      Navigator.pop(context);
       print("Success");
     } else {
       //showErroMessage("Creation Failed");
@@ -256,7 +270,7 @@ class _HumorFormState extends State<HumorForm> {
       "id": id,
       "titulo": titulo,
       "descricao": descricao,
-      "tipoHumor": 1,
+      "tipoHumor": tipoHumor,
       "permiteVisualizacao": !permiteVisualizacao
     };
 
